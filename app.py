@@ -33,3 +33,30 @@ st.markdown(f"Cantidad de Delitos: {max_cantidad_municipio}", unsafe_allow_html=
 st.subheader('Tipo de delito')
 delitos = df['DELITO'].value_counts()
 st.bar_chart(delitos)
+#crear lista de las columnas de interes
+seleccion_columnas = ['FECHA_HECHOS','DELITO', 'ETAPA','FISCAL_ASIGNADO','DEPARTAMENTO','MUNICIPIO_HECHOS']
+#Actualizo el Dataframe -df- con las columnas de interes ordenadas por fecha y reseteo el indice
+df = df[seleccion_columnas].sort_values(by='FECHA_HECHOS', ascending=True).reset_index(drop=True)
+
+#convierto la columna FECHA_HECHOS a formato de fecha
+df['FECHA_HECHOS']= pd.to_datetime(df['FECHA_HECHOS'], errors='coerce')
+#extraigo fecha sin la hora
+df['FECHA_HECHOS'] = df['FECHA_HECHOS'].dt.date
+
+#CALCULO  DE MUNICIPIO CON MAS DELITOS
+max_municipio = df['MUNICIPIO_HECHOS'].value_counts().index(0).upper(0)
+st.write(max_municipio) 
+st.write(f'Municipio TOP Delitos: {max_municipio}')
+
+
+max_cantidad_municipio = ['MUNICIPIO_HECHOS'].value.counts().iloc(0)
+st.write(max_cantidad_municipio)
+st.write(f'Cantidad de Delitos:{max_cantidad_municipio}')
+
+# CONTRUIR LA PÁGINA
+st.set_page_config(page_title='Dashboard de Delitos - Fiscalia', layout='centered')
+
+st.header('Dashboard de Delitos - Fiscalía', anchor=None)
+st.dataframe(DF)
+st.markdown(f"Municipio con más delitos: {max_municipio}", unsafe_allow_html=True)
+st.markdown(f"Cantidad de Delitos: {max_cantidad_municipio}", unsafe_allow_html=True)
